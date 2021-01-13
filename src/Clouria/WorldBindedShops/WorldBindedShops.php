@@ -49,12 +49,14 @@ use pocketmine\event\{
 	plugin\PluginEnableEvent,
 	level\ChunkLoadEvent,
 	level\ChunkUnloadEvent
-}
+};
 
 use onebone\economyshop\{EconomyShop,
 	provider\YamlProvider,
 	provider\DataProvider
 };
+
+use Clouria\WorldBindedShops\custom\CustomItemDisplayer;
 
 final class WorldBindedShops extends PluginBase implements EventListener {
 
@@ -111,7 +113,7 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 		$reflect = new \ReflectionProperty($this->getApi(), 'items');
 		$reflect->setAccessible(true);
 		$shops = $reflect->getValue($this->getApi());
-		foreach ($shops as $id => $shop) if ($shop instanceof ItemDisplayer) {
+		foreach ($shops as $id => $shop) if ($shop instanceof CustomItemDisplayer) {
 			$pos = $shop->getLinked();
 			if (($pos->getFloorX() >> 4) === $chunk->getX() and ($pos->getFloorZ() >> 4) === $chunk->getZ()) unset($shops[$id]);
 		}
