@@ -1,0 +1,8 @@
+name: WorldBindedShops
+author: ClouriaNetworkDevelopers
+authors: [Endermanbugzjfc]
+api: 3.0.0
+version: 1.0.0
+main: Clouria\WorldBindedShops\WorldBindedShops
+website: https://github.com/crnw-dev/WorldBindedShop.git
+depend: [EconomyShop]
