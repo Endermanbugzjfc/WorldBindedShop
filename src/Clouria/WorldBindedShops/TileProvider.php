@@ -97,7 +97,7 @@ class TileProvider extends DataProvider {
 	 */
 	public function getAll() : array {
 		foreach (Server::getInstance()->getLevels() as $w) foreach ($w->getTiles() as $tile) if ($tile instanceof ShopTile) $tiles[] = $tile;
-		return $tiles;
+		return $tiles ?? [];
 	}
 
 	public function getProviderName() : string {
