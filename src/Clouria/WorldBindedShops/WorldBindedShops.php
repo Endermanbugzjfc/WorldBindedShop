@@ -51,7 +51,10 @@ use pocketmine\event\{
 	level\ChunkUnloadEvent
 }
 
-use onebone\economyshop\{EconomyShop, provider\YamlProvider};
+use onebone\economyshop\{EconomyShop,
+	provider\YamlProvider,
+	provider\DataProvider
+};
 
 final class WorldBindedShops extends PluginBase implements EventListener {
 
@@ -59,6 +62,11 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 	 * @var self
 	 */
 	private static $instance = null;
+
+	/**
+	 * @var null|DataProvider
+	 */
+	public $provider = null;
 
 	public function onLoad() : void {
 		self::$instance = $this;
@@ -120,7 +128,8 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 		$reflect = new \ReflectionProperty($this->getApi(), 'provider');
 		$reflect->setAccessible(true);
 		if (!$reflect->getValue($this->getApi()) instanceof YamlProvider) return false;
-		$reflect->setValue($ev->getPlugin(), new TileProvider);
+		if (!$this->provider instanceof DataProvider) $this->provider = new TileProvider;
+		$reflect->setValue($ev->getPlugin(), $this->provider);
 	}
 
 	public function getApi() : ?EconomyShop {

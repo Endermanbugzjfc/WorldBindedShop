@@ -41,7 +41,7 @@
 */
 
 declare(strict_types=1);
-namespace Clouria\WorldBindedShops;
+namespace Clouria\WorldBindedShops\custom;
 
 use pocketmine\{Server,
 	level\Level,
