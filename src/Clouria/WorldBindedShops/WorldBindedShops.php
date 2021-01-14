@@ -43,20 +43,27 @@
 declare(strict_types=1);
 namespace Clouria\WorldBindedShops;
 
-use pocketmine\plugin\PluginBase;
+use pocketmine\{
+	Player,
+	plugin\PluginBase,
+	command\Command,
+	command\CommandSender,
+	utils\TextFormat as TF
+};
 use pocketmine\event\{
 	Listener,
 	plugin\PluginEnableEvent,
 	level\ChunkLoadEvent,
-	level\ChunkUnloadEvent,
-	command\Command,
-	command\CommandSender
+	level\ChunkUnloadEvent
 };
 
 use onebone\economyshop\{EconomyShop,
 	provider\YamlProvider,
 	provider\DataProvider
 };
+
+use function strtolower;
+use function implode;
 
 use Clouria\WorldBindedShops\custom\CustomItemDisplayer;
 
@@ -138,7 +145,24 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 	}
 
 	public function onCommand(CommandSender $sender, Command $cmd, string $alias, array $args) : bool {
-		
+		if (strtolower($cmd->getName()) !== 'worldbindedshops') return true;
+		switch ($args[0] ?? null) {
+			case 'import':
+				break;
+			
+			default:
+				if ($this->hasPermission($sender, 'worldbindedshops.shops.import')) $cmdl[] = 'import [File path: string]';
+				if ($this->hasPermission($sender, 'worldbindedshops.shops.export')) $cmdl[] = 'export [File path: string]';
+				if (empty($cmdl ?? [])) return true;
+				$sender->sendMessage(TF::BOLD . TF::GOLD . 'Command usage: ' . ($separator = TF::RESET . "\n - " . TF::YELLOW) . implode($separator, $cmdl));
+				break;
+		}
+		return true;
+	}
+
+	private function hasPermission(CommandSender $sender, string $permission) : bool {
+		if (!$sender instanceof Player) return true;
+		return $sender->hasPermission($permission);
 	}
 
 	public function getApi() : ?EconomyShop {
