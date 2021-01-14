@@ -6,3 +6,33 @@ version: 1.0.0
 main: Clouria\WorldBindedShops\WorldBindedShops
 website: https://github.com/crnw-dev/WorldBindedShop.git
 depend: [EconomyShop]
+
+commands:
+  worldbindedshops:
+    description: WorldBindedShops plugin command
+    usage: '/worldbindedshops'
+    permission: worldbindedshops.cmd
+    aliases:
+      - worldbindedshop
+      - wbs
+####
+
+permissions:
+  worldbindedshops:
+    description: Full access to all WorldBindedShops functions
+    default: op
+    children:
+      worldbindedshops.cmd:
+        description: Permission to use run the WorldBindedShops plugin command
+        default: op
+      worldbindedshops.shops:
+        description: 'Access to bulk shops management functions'
+        default: false
+        children:
+          worldbindedshops.shops.export:
+            description: 'Permission to export shop tiles'
+            default: false
+          worldbindedshops.shops.import:
+            description: 'Permission to import shop tiles'
+            default: false
+#

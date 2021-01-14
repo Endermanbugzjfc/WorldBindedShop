@@ -48,7 +48,9 @@ use pocketmine\event\{
 	Listener,
 	plugin\PluginEnableEvent,
 	level\ChunkLoadEvent,
-	level\ChunkUnloadEvent
+	level\ChunkUnloadEvent,
+	command\Command,
+	command\CommandSender
 };
 
 use onebone\economyshop\{EconomyShop,
@@ -85,7 +87,6 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 		foreach ($all = $conf->getAll() as $k => $v) $conf->remove($k);
 
 		$conf->set('tile-provider', (bool)($all['tile-provider'] ?? true));
-		$conf->set('export-mode', (bool)($all['tile-provider'] ?? false));
 
 		$conf->save();
 		$conf->reload();
@@ -97,6 +98,7 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 	}
 
 	public function onChunkLoad(ChunkLoadEvent $ev) : void {
+		if (!(bool)$this->getConfig()->get('tile-provider', true)) return;
 		$chunk = $ev->getChunk();
 		foreach ($chunk->getTiles() as $tile) if ($tile instanceof ShopTile) $tiles[] = $tile;
 		if (empty($tiles ?? [])) return;
@@ -109,6 +111,7 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 	}
 
 	public function onChunkUnload(ChunkUnloadEvent $ev) : void {
+		if (!(bool)$this->getConfig()->get('tile-provider', true)) return;
 		$chunk = $ev->getChunk();
 		$reflect = new \ReflectionProperty($this->getApi(), 'items');
 		$reflect->setAccessible(true);
@@ -132,6 +135,10 @@ final class WorldBindedShops extends PluginBase implements EventListener {
 		if (!$reflect->getValue($this->getApi()) instanceof YamlProvider) return false;
 		if (!$this->provider instanceof DataProvider) $this->provider = new TileProvider;
 		$reflect->setValue($ev->getPlugin(), $this->provider);
+	}
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $alias, array $args) : bool {
+		
 	}
 
 	public function getApi() : ?EconomyShop {
